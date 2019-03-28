@@ -36,7 +36,7 @@
             // 
             this.numberInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numberInput.Location = new System.Drawing.Point(36, 25);
-            this.numberInput.MaxLength = 19;
+            this.numberInput.MaxLength = 30;
             this.numberInput.Name = "numberInput";
             this.numberInput.Size = new System.Drawing.Size(263, 34);
             this.numberInput.TabIndex = 0;
@@ -60,6 +60,7 @@
             this.ClientSize = new System.Drawing.Size(451, 100);
             this.Controls.Add(this.checkButton);
             this.Controls.Add(this.numberInput);
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "CreditCardValidation";
             this.ResumeLayout(false);

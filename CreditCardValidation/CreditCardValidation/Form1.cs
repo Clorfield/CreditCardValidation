@@ -13,28 +13,61 @@ namespace CreditCardValidation
 
         private void numberInput_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
             {
                 e.Handled = true;
             }
         }
 
+        public string GenerateNextCreditCardNumber(string cardNumber, string cardVendor)
+        {
+                long integerСardnumber = Convert.ToInt64(cardNumber);
+                int counter = 0;
+
+                while (true)
+                {
+                    counter++;
+                    integerСardnumber += 1;
+                    cardNumber = integerСardnumber.ToString();
+
+                    if (IsCreditCardNumberValid(cardNumber) && GetCreditCardVendor(cardNumber) == cardVendor)
+                    {
+                        return cardNumber;
+                    }
+                    if (counter > 100)
+                    {
+                        break;
+                    }
+                }
+            return "There is no more card numbers availible!";
+        }
+
         private void checkButton_Click(object sender, EventArgs e)
         {
-            string cardNumber = numberInput.Text;
+            string cardNumber = GetCreditCardNumberWithoutSpace(numberInput.Text);
 
             if (IsCreditCardNumberValid(cardNumber))
             {
                 string vendor = GetCreditCardVendor(cardNumber);
 
-                MessageBox.Show("Credit card vendor is: " + vendor);
+                string nextCard = GenerateNextCreditCardNumber(cardNumber, vendor);
+
+                MessageBox.Show("Credit card vendor is: " + vendor + "\nNext card number is: " + nextCard);
             }
             else
-                MessageBox.Show("Incorrect input!");
+                MessageBox.Show("Incorrect card number!");
+        }
+
+        private string GetCreditCardNumberWithoutSpace(string creditCardNumber)
+        {
+            return creditCardNumber.Replace(" ", "");
         }
 
         public static bool IsCreditCardNumberValid(string creditCardNumber)
         {
+            bool hasOnlyNumbers = creditCardNumber.All(Char.IsDigit);
+            if (!hasOnlyNumbers)
+                return false;
 
             int sum = 0;
             int n;
@@ -43,11 +76,9 @@ namespace CreditCardValidation
             for (int i = creditCardNumber.Length - 1; i >= 0; i--)
             {
                 n = int.Parse(nx[i].ToString());
-
                 if (alternate)
                 {
                     n *= 2;
-
                     if (n > 9)
                     {
                         n = (n % 10) + 1;
@@ -56,7 +87,7 @@ namespace CreditCardValidation
                 sum += n;
                 alternate = !alternate;
             }
-            return (sum % 10 == 0);
+            return (sum % 10 == 0) && creditCardNumber.Length > 0;
         }
 
         public string GetCreditCardVendor(string cardNumber)
