@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace CreditCardValidation
@@ -21,9 +22,10 @@ namespace CreditCardValidation
         private void checkButton_Click(object sender, EventArgs e)
         {
             string cardNumber = numberInput.Text;
-            if (cardNumber.Length >= 12 && cardNumber.Length <= 19)
+
+            if (IsCreditCardNumberValid(cardNumber))
             {
-                string vendor = CreditCardVendor(cardNumber);
+                string vendor = GetCreditCardVendor(cardNumber);
 
                 MessageBox.Show("Credit card vendor is: " + vendor);
             }
@@ -31,7 +33,33 @@ namespace CreditCardValidation
                 MessageBox.Show("Incorrect input!");
         }
 
-        public string CreditCardVendor(string cardNumber)
+        public static bool IsCreditCardNumberValid(string creditCardNumber)
+        {
+
+            int sum = 0;
+            int n;
+            bool alternate = false;
+            char[] nx = creditCardNumber.ToArray();
+            for (int i = creditCardNumber.Length - 1; i >= 0; i--)
+            {
+                n = int.Parse(nx[i].ToString());
+
+                if (alternate)
+                {
+                    n *= 2;
+
+                    if (n > 9)
+                    {
+                        n = (n % 10) + 1;
+                    }
+                }
+                sum += n;
+                alternate = !alternate;
+            }
+            return (sum % 10 == 0);
+        }
+
+        public string GetCreditCardVendor(string cardNumber)
         {
             string IIN1 = cardNumber.Substring(0, 1);
             string IIN2 = cardNumber.Substring(0, 2);
