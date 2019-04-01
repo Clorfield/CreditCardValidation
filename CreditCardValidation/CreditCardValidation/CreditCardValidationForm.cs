@@ -4,9 +4,9 @@ using System.Windows.Forms;
 
 namespace CreditCardValidation
 {
-    public partial class Form1 : Form
+    public partial class CreditCardValidationForm : Form
     {
-        public Form1()
+        public CreditCardValidationForm()
         {
             InitializeComponent();
         }
@@ -21,25 +21,25 @@ namespace CreditCardValidation
 
         public string GenerateNextCreditCardNumber(string cardNumber, string cardVendor)
         {
-                long integerСardnumber = Convert.ToInt64(cardNumber);
+                ulong integerСardnumber = Convert.ToUInt64(cardNumber);
                 int counter = 0;
 
                 while (true)
                 {
                     counter++;
-                    integerСardnumber += 1;
+                    integerСardnumber++;
                     cardNumber = integerСardnumber.ToString();
 
                     if (IsCreditCardNumberValid(cardNumber) && GetCreditCardVendor(cardNumber) == cardVendor)
                     {
                         return cardNumber;
                     }
-                    if (counter > 100)
+                    if (counter > 10)
                     {
                         break;
                     }
                 }
-            return "There is no more card numbers availible!";
+            return "There is no more card numbers availaible!";
         }
 
         private void checkButton_Click(object sender, EventArgs e)
@@ -87,9 +87,9 @@ namespace CreditCardValidation
                 sum += n;
                 alternate = !alternate;
             }
-            return (sum % 10 == 0) && creditCardNumber.Length > 0;
+            return (sum % 10 == 0) && creditCardNumber.Length > 0 && creditCardNumber.Length <= 19;
         }
-
+        //IIN - issuer identification number
         public string GetCreditCardVendor(string cardNumber)
         {
             string IIN1 = cardNumber.Substring(0, 1);
@@ -126,6 +126,11 @@ namespace CreditCardValidation
                 vendor = "unknown";
 
             return vendor;
+        }
+
+        private void CreditCardValidationForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
