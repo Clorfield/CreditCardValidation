@@ -21,12 +21,10 @@ namespace CreditCardValidation
 
         public string GenerateNextCreditCardNumber(string cardNumber, string cardVendor)
         {
-                ulong integerСardnumber = Convert.ToUInt64(cardNumber);
-                int counter = 0;
-
+            ulong integerСardnumber = Convert.ToUInt64(cardNumber);
+            int cardNumberLength = cardNumber.Length;
                 while (true)
                 {
-                    counter++;
                     integerСardnumber++;
                     cardNumber = integerСardnumber.ToString();
 
@@ -34,10 +32,8 @@ namespace CreditCardValidation
                     {
                         return cardNumber;
                     }
-                    if (counter > 10)
-                    {
+                    if (cardNumber.Length > cardNumberLength)
                         break;
-                    }
                 }
             return "There is no more card numbers availaible!";
         }
@@ -45,14 +41,17 @@ namespace CreditCardValidation
         private void checkButton_Click(object sender, EventArgs e)
         {
             string cardNumber = GetCreditCardNumberWithoutSpace(numberInput.Text);
-
             if (IsCreditCardNumberValid(cardNumber))
             {
                 string vendor = GetCreditCardVendor(cardNumber);
 
-                string nextCard = GenerateNextCreditCardNumber(cardNumber, vendor);
-
-                MessageBox.Show("Credit card vendor is: " + vendor + "\nNext card number is: " + nextCard);
+                if (vendor != "unknown")
+                {
+                    string nextCard = GenerateNextCreditCardNumber(cardNumber, vendor);
+                    MessageBox.Show("Credit card vendor is: " + vendor + "\nNext card number is: " + nextCard);
+                }
+                else
+                    MessageBox.Show("Credit card vendor is: " + vendor);
             }
             else
                 MessageBox.Show("Incorrect card number!");
